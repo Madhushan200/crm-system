@@ -218,7 +218,9 @@ export default function AdminPage() {
             importBatch: currentBatch,
           };
         })
-        .filter(Boolean);
+        .filter(
+  (lead): lead is NonNullable<typeof lead> => lead !== null
+);
 
       if (importedLeads.length === 0) {
         alert("No valid leads found. Required columns: Name, Phone, Course");
@@ -235,7 +237,9 @@ export default function AdminPage() {
         return;
       }
 
-      const { error } = await supabase.from("leads").insert(importedLeads);
+      const { error } = await supabase
+  .from("leads")
+  .insert(importedLeads as any[]);
 
       if (error) {
         alert("Error importing leads");
